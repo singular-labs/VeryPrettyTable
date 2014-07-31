@@ -1763,6 +1763,18 @@ def from_django_query(query_set, **kwargs):
         table.add_row(row)
     return table
 
+def from_dict_array(dict_array, **kwargs):
+    keys_set = {tuple(x.keys()) for x in dict_array}
+    if len(keys_set) > 1:
+        raise ValueError("Multiple key sets: %s" % keys_set)
+    keys = next(iter(keys_set))
+
+    table = VeryPrettyTable(**kwargs)
+    table.field_names = keys
+    for row in dict_array:
+        table.add_row([row[k] for k in keys])
+    return table
+
 ##############################
 # MAIN (TEST FUNCTION)       #
 ##############################
